@@ -1,11 +1,12 @@
 import Counter from "./components/Counter";
 import Gallery from "./components/Gallery";
+import Healthtracker from "./components/Healthtracker";
 
 const page = () => {
   return (
     <div>
       <Counter />
-      <Gallery />
+      <Healthtracker />
 
       <footer className="text-center text-gray-500 py-6">
         GAIA Genesis © 2025 — Built with Next.js & Tailwind
