@@ -3,15 +3,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { useEffect } from "react";
 
-// useEffect(() => {
-//   localStorage.setItem("galleryFilter", filter);
-// }, [filter]);
-
-// useEffect(() => {
-//   const saved = localStorage.getItem("galleryFilter");
-//   if (saved) setFilter(saved);
-// }, []);
-
 export default function Gallery() {
   // Define how many files of each type
   const jpgCount = 172;
@@ -27,11 +18,13 @@ export default function Gallery() {
   const gifs = Array.from({ length: gifCount }, (_, i) => `gif (${i + 1}).gif`);
 
   // Combine them all into one array
-  const [images] = useState([...jpgs, ...webps, ...gifs]);
+  const [images] = useState([...jpgs, ...webps, ...gifs]); // No need to update, so no setImages
 
   const [selected, setSelected] = useState(null); // for lightbox
 
-  const [showButton, setShowButton] = useState(false);
+  const [showButton, setShowButton] = useState(false); // State to track button visibility
+
+  const [dark, setDark] = useState(false); // State to track dark mode
 
   if (typeof window !== "undefined") {
     window.onscroll = () => {
@@ -48,11 +41,38 @@ export default function Gallery() {
     return true; // "all" → no filter
   });
 
+  const [loaded, setLoaded] = useState(false); // ✅ flag
+
+  // Load from localStorage (only in browser)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("galleryFilter");
+      if (saved) setFilter(saved);
+      setLoaded(true); // ✅ mark as loaded
+    }
+  }, []);
+
+  // Save to localStorage *after* initial load
+  useEffect(() => {
+    if (loaded && typeof window !== "undefined") {
+      localStorage.setItem("galleryFilter", filter);
+    }
+  }, [filter, loaded]);
+
   return (
     <div className="mt-10 px-4 mx-5">
+      <button
+        className={`${
+          dark ? "bg-black text-white" : "bg-white text-black"
+        } px-3 py-1 rounded mb-4 border border-gray-300 hover:bg-gray-200 transition`}
+        onClick={() => setDark(!dark)}
+      >
+        Toggle Theme
+      </button>
       <h2 className="text-2xl font-bold text-center mb-6">
         📸 GAIA Genesis Gallery
       </h2>
+
       <p className="text-center text-gray-500 mb-8">
         Total images: {filteredImages.length} of {images.length} images
       </p>
