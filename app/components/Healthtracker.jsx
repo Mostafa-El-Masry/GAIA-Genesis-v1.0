@@ -47,6 +47,33 @@ export default function HealthTracker() {
     }
   }, []);
 
+  // calculate summary stats
+  const glucoseValues = records.map((r) => Number(r.glucose)); // get only glucose numbers
+
+  const average =
+    glucoseValues.length > 0
+      ? (
+          glucoseValues.reduce((a, b) => a + b, 0) / glucoseValues.length
+        ).toFixed(1)
+      : 0;
+
+  const highest = glucoseValues.length > 0 ? Math.max(...glucoseValues) : 0;
+  const lowest = glucoseValues.length > 0 ? Math.min(...glucoseValues) : 0;
+
+  // calculate insulin stats
+  const insulinValues = records.map((r) => Number(r.insulin));
+  const avgInsulin =
+    insulinValues.length > 0
+      ? (
+          insulinValues.reduce((a, b) => a + b, 0) / insulinValues.length
+        ).toFixed(1)
+      : 0;
+
+  const highestInsulin =
+    insulinValues.length > 0 ? Math.max(...insulinValues) : 0;
+  const lowestInsulin =
+    insulinValues.length > 0 ? Math.min(...insulinValues) : 0;
+
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4 text-center">🩺 Health Tracker</h2>
@@ -135,6 +162,52 @@ export default function HealthTracker() {
           <p className="text-gray-500 text-sm mb-2">
             Total Readings: {records.length}
           </p>
+          {records.length > 0 && (
+            <div className="bg-white rounded p-4 mb-4 shadow">
+              <h3 className="text-lg font-semibold mb-2">
+                📊 Summary For Glucose
+              </h3>
+              <div className="grid grid-cols-3 text-center">
+                <div>
+                  <p className="text-gray-500 text-sm">Average</p>
+                  <p className="text-xl font-bold">{average}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Highest</p>
+                  <p className="text-xl font-bold text-red-600">{highest}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Lowest</p>
+                  <p className="text-xl font-bold text-green-600">{lowest}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          {records.length > 0 && (
+            <div className="bg-white rounded p-4 mb-4 shadow">
+              <h3 className="text-lg font-semibold mb-2">
+                📊 Summary For Insulin
+              </h3>
+              <div className="grid grid-cols-3 text-center">
+                <div>
+                  <p className="text-gray-500 text-sm">Average</p>
+                  <p className="text-xl font-bold">{avgInsulin}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Highest</p>
+                  <p className="text-xl font-bold text-red-600">
+                    {highestInsulin}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">Lowest</p>
+                  <p className="text-xl font-bold text-green-600">
+                    {lowestInsulin}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <table className="w-full max-w-lg border text-sm bg-white rounded">
             <thead>
@@ -154,7 +227,18 @@ export default function HealthTracker() {
                   <tr key={i}>
                     <td className="p-2 border">{r.date}</td>
                     <td className="p-2 border">{r.time}</td>
-                    <td className="p-2 border">{r.glucose}</td>
+                    <td
+                      className={`p-2 border ${
+                        Number(r.glucose) > 180
+                          ? "bg-red-100"
+                          : Number(r.glucose) < 70
+                          ? "bg-green-100"
+                          : ""
+                      }`}
+                    >
+                      {r.glucose}
+                    </td>
+
                     <td className="p-2 border">{r.insulin}</td>
                     <td className="p-2 border">{r.notes}</td>
                   </tr>
