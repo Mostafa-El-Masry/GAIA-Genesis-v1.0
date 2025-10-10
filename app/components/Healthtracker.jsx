@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function HealthTracker() {
   // one piece of state for each field
@@ -31,8 +31,24 @@ export default function HealthTracker() {
     setNotes("");
   }
 
+  useEffect(() => {
+    // Only save if there’s at least one record
+    if (records.length > 0) {
+      localStorage.setItem("healthRecords", JSON.stringify(records));
+    }
+  }, [records]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("healthRecords");
+      if (saved) {
+        setRecords(JSON.parse(saved));
+      }
+    }
+  }, []);
+
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow max-w-lg">
+    <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4 text-center">🩺 Health Tracker</h2>
 
       {/* Date */}
@@ -103,6 +119,16 @@ export default function HealthTracker() {
       >
         ➕ Add Reading
       </button>
+      <button
+        onClick={() => {
+          setRecords([]);
+          localStorage.removeItem("healthRecords");
+        }}
+        className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-400 transition mt-2"
+      >
+        🗑️ Clear All
+      </button>
+
       {records.length > 0 && (
         <div className="mt-6  ">
           <h3 className="text-lg font-semibold mb-2">📋 Readings</h3>
