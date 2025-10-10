@@ -6,6 +6,10 @@ const page = () => {
     <div>
       <Counter />
       <Gallery />
+
+      <footer className="text-center text-gray-500 py-6">
+        GAIA Genesis © 2025 — Built with Next.js & Tailwind
+      </footer>
     </div>
   );
 };
