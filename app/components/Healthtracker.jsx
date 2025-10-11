@@ -10,6 +10,8 @@ export default function HealthTracker() {
   const [notes, setNotes] = useState("");
   const [records, setRecords] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [sortBy, setSortBy] = useState("date-desc");
+  const [filterType, setFilterType] = useState("all");
 
   function handleAdd() {
     // create one record object
@@ -106,6 +108,24 @@ export default function HealthTracker() {
     setGlucose("");
     setInsulin("");
     setNotes("");
+  }
+
+  let displayedRecords = [...records].filter((r) => {
+    const g = Number(r.glucose);
+    if (filterType === "high") return g >= 180;
+    if (filterType === "low") return g <= 70;
+    if (filterType === "normal") return g > 70 && g < 180;
+    return true; // "all"
+  });
+
+  if (sortBy === "date-desc") {
+    displayedRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+  } else if (sortBy === "date-asc") {
+    displayedRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+  } else if (sortBy === "glucose-high") {
+    displayedRecords.sort((a, b) => Number(b.glucose) - Number(a.glucose));
+  } else if (sortBy === "glucose-low") {
+    displayedRecords.sort((a, b) => Number(a.glucose) - Number(b.glucose));
   }
 
   return (
@@ -243,7 +263,38 @@ export default function HealthTracker() {
               </div>
             </div>
           )}
+          <div className="flex flex-row justify-evenly">
+            <div className="flex justify-end mb-3">
+              <label className="text-sm text-gray-600 mr-2">Filter:</label>
 
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                <option value="all">Show All</option>
+                <option value="high">High (≥180)</option>
+                <option value="low">Low (≤70)</option>
+                <option value="normal">Normal (70–180)</option>
+              </select>
+            </div>
+
+            {records.length > 0 && (
+              <div className="flex justify-end mb-3">
+                <label className="text-sm text-gray-600 mr-2">Sort by:</label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="border rounded px-2 py-1 text-sm"
+                >
+                  <option value="date-desc">Date (Newest First)</option>
+                  <option value="date-asc">Date (Oldest First)</option>
+                  <option value="glucose-high">Glucose (High → Low)</option>
+                  <option value="glucose-low">Glucose (Low → High)</option>
+                </select>
+              </div>
+            )}
+          </div>
           <table className="w-full max-w-xl border text-sm bg-white rounded">
             <thead>
               <tr className="bg-gray-200 text-left">
@@ -257,7 +308,7 @@ export default function HealthTracker() {
               </tr>
             </thead>
             <tbody>
-              {records
+              {displayedRecords
                 .slice()
                 .reverse()
                 .map((r, i) => (
