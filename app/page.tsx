@@ -1,5 +1,3 @@
-import Counter from "./components/Counter";
-import Gallery from "./components/Gallery";
 import Healthtracker from "./components/Healthtracker";
 
 const page = () => {
