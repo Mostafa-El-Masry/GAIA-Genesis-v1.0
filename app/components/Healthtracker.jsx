@@ -9,10 +9,12 @@ export default function HealthTracker() {
   const [insulin, setInsulin] = useState("");
   const [notes, setNotes] = useState("");
   const [records, setRecords] = useState([]);
+  const [editingId, setEditingId] = useState(null);
 
   function handleAdd() {
     // create one record object
     const newRecord = {
+      id: Date.now(), // unique number (timestamp)
       date,
       time,
       glucose,
@@ -74,8 +76,40 @@ export default function HealthTracker() {
   const lowestInsulin =
     insulinValues.length > 0 ? Math.min(...insulinValues) : 0;
 
+  function handleDelete(id) {
+    const updated = records.filter((r) => r.id !== id);
+    setRecords(updated);
+  }
+
+  function handleEdit(id) {
+    const recordToEdit = records.find((r) => r.id === id);
+
+    // populate form fields
+    setDate(recordToEdit.date);
+    setTime(recordToEdit.time);
+    setGlucose(recordToEdit.glucose);
+    setInsulin(recordToEdit.insulin);
+    setNotes(recordToEdit.notes);
+
+    // store which record we’re editing
+    setEditingId(id);
+  }
+  function handleUpdate() {
+    const updatedRecords = records.map((r) =>
+      r.id === editingId ? { ...r, date, time, glucose, insulin, notes } : r
+    );
+
+    setRecords(updatedRecords);
+    setEditingId(null);
+    setDate("");
+    setTime("");
+    setGlucose("");
+    setInsulin("");
+    setNotes("");
+  }
+
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow">
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4 text-center">🩺 Health Tracker</h2>
 
       {/* Date */}
@@ -141,11 +175,12 @@ export default function HealthTracker() {
         </p>
       </div>
       <button
-        onClick={handleAdd}
+        onClick={editingId ? handleUpdate : handleAdd}
         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-500 transition"
       >
-        ➕ Add Reading
+        {editingId ? "💾 Update Reading" : "➕ Add Reading"}
       </button>
+
       <button
         onClick={() => {
           setRecords([]);
@@ -209,7 +244,7 @@ export default function HealthTracker() {
             </div>
           )}
 
-          <table className="w-full max-w-lg border text-sm bg-white rounded">
+          <table className="w-full max-w-xl border text-sm bg-white rounded">
             <thead>
               <tr className="bg-gray-200 text-left">
                 <th className="p-2 border">Date</th>
@@ -217,6 +252,8 @@ export default function HealthTracker() {
                 <th className="p-2 border">Glucose</th>
                 <th className="p-2 border">Insulin</th>
                 <th className="p-2 border">Notes</th>
+                <th className="p-2 border">Edit</th>
+                <th className="p-2 border">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -241,6 +278,22 @@ export default function HealthTracker() {
 
                     <td className="p-2 border">{r.insulin}</td>
                     <td className="p-2 border">{r.notes}</td>
+                    <td className="p-2 border text-center">
+                      <button
+                        onClick={() => handleEdit(r.id)}
+                        className="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </button>
+                    </td>
+                    <td className="p-2 border text-center">
+                      <button
+                        onClick={() => handleDelete(r.id)}
+                        className="text-red-600 hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
             </tbody>
