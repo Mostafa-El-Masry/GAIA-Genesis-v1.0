@@ -129,8 +129,10 @@ export default function HealthTracker() {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-gray-100 rounded-lg shadow">
-      <h2 className="text-xl font-bold mb-4 text-center">🩺 Health Tracker</h2>
+    <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-50 rounded-lg shadow-md">
+      <h2 className="text-2xl mx-auto font-bold text-center mb-6">
+        🩺 Health Tracker
+      </h2>
 
       {/* Date */}
       <label className="block mb-2 text-sm font-medium">Date</label>
@@ -295,7 +297,7 @@ export default function HealthTracker() {
               </div>
             )}
           </div>
-          <table className="w-full max-w-xl border text-sm bg-white rounded">
+          <table className="w-full max-w-2xl border text-sm bg-white rounded">
             <thead>
               <tr className="bg-gray-200 text-left">
                 <th className="p-2 border">Date</th>
@@ -312,7 +314,10 @@ export default function HealthTracker() {
                 .slice()
                 .reverse()
                 .map((r, i) => (
-                  <tr key={i}>
+                  <tr
+                    key={r.id}
+                    className={i % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                  >
                     <td className="p-2 border">{r.date}</td>
                     <td className="p-2 border">{r.time}</td>
                     <td
@@ -327,7 +332,10 @@ export default function HealthTracker() {
                       {r.glucose}
                     </td>
 
-                    <td className="p-2 border">{r.insulin}</td>
+                    <td className="p-2 border">
+                      {r.insulin}
+                      <small className="text-gray-400">units</small>
+                    </td>
                     <td className="p-2 border">{r.notes}</td>
                     <td className="p-2 border text-center">
                       <button
