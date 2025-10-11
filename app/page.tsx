@@ -5,7 +5,6 @@ import Healthtracker from "./components/Healthtracker";
 const page = () => {
   return (
     <div>
-      <Counter />
       <Healthtracker />
 
       <footer className="text-center text-gray-500 py-6">
