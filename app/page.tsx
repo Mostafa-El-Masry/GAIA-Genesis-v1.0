@@ -1,8 +1,10 @@
 import Healthtracker from "./components/Healthtracker";
+import Gallery from "./components/Gallery";
 
 const page = () => {
   return (
     <div>
+      <Gallery />
       <Healthtracker />
 
       <footer className="text-center text-gray-500 py-6">
