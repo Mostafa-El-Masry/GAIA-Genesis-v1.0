@@ -21,6 +21,12 @@ const page = () => {
       >
         View Health Tracker
       </Link>
+      <Link
+        href="/WealthTracker"
+        className="text-blue-500 underline block text-center mb-6"
+      >
+        View Wealth Tracker
+      </Link>
 
       <footer className="text-center text-gray-500 py-6">
         GAIA Genesis © 2025 — Built with Next.js & Tailwind
