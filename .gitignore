@@ -43,3 +43,11 @@ next-env.d.ts
 # videos
 *.mp4
 
+# images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+
