@@ -67,7 +67,9 @@ export default function FinancesPage() {
   // === UI ===
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-50 rounded-lg shadow">
-      <h2 className="text-3xl font-bold text-center mb-6">💰 Finances Tracker</h2>
+      <h2 className="text-3xl font-bold text-center mb-6">
+        💰 Finances Tracker
+      </h2>
 
       {/* Input Form */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
@@ -155,9 +157,7 @@ export default function FinancesPage() {
                 <td className="p-2 border capitalize">{t.type}</td>
                 <td
                   className={`p-2 border font-semibold ${
-                    t.type === "income"
-                      ? "text-green-600"
-                      : "text-red-600"
+                    t.type === "income" ? "text-green-600" : "text-red-600"
                   }`}
                 >
                   {t.amount.toFixed(2)}
